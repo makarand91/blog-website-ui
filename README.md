@@ -79,17 +79,40 @@ cd ../server && npm install
 
 3. Configure environment variables:
 
+**Backend Configuration:**
+
 Create a `.env` file in the `server` directory:
 ```bash
 cd server
 cp .env.example .env
 ```
 
-Edit `.env` with your Strapi configuration:
+Edit `server/.env` with your Strapi configuration:
 ```
 PORT=5000
 STRAPI_URL=http://localhost:1337
 STRAPI_API_TOKEN=your_strapi_api_token_here
+```
+
+**Frontend Configuration (Optional):**
+
+Create a `.env` file in the `client` directory:
+```bash
+cd client
+cp .env.example .env
+```
+
+Edit `client/.env` to customize frontend settings:
+```
+# Frontend server port (default: 3000)
+VITE_PORT=3000
+
+# Proxy target - backend server URL (default: http://localhost:5000)
+VITE_PROXY_TARGET=http://localhost:5000
+
+# API Base URL - only needed for production or custom API URLs
+# Leave empty for development (uses proxy)
+# For production: VITE_API_BASE_URL=https://api.example.com/api
 ```
 
 ## Running the Application
@@ -195,13 +218,32 @@ theme: {
 }
 ```
 
-### API Configuration
+### Backend API Configuration
 
 Update the Strapi URL and API token in `server/.env`:
 ```
 STRAPI_URL=https://your-strapi-instance.com
 STRAPI_API_TOKEN=your_token_here
+PORT=5000
 ```
+
+### Frontend Configuration
+
+**Development:**
+- By default, the frontend runs on port 3000 and proxies API requests to the backend
+- To change ports, update `client/.env`:
+  ```
+  VITE_PORT=3001
+  VITE_PROXY_TARGET=http://localhost:5001
+  ```
+
+**Production:**
+- Set the direct API URL in `client/.env`:
+  ```
+  VITE_API_BASE_URL=https://your-backend-api.com/api
+  ```
+- Build the frontend: `npm run build`
+- Serve the built files from `client/dist/`
 
 ## Troubleshooting
 
@@ -213,13 +255,24 @@ STRAPI_API_TOKEN=your_token_here
    - Verify API token permissions
 
 2. **Port already in use**
-   - Change PORT in server/.env
-   - Update proxy configuration in client/vite.config.js
+   - Backend: Change PORT in server/.env
+   - Frontend: Change VITE_PORT in client/.env
+   - Update VITE_PROXY_TARGET in client/.env if backend port changed
 
 3. **Articles not displaying**
    - Verify Strapi collections structure matches expected format
    - Check browser console for errors
    - Verify API responses in Network tab
+
+4. **API requests failing in production**
+   - Ensure VITE_API_BASE_URL is set in client/.env
+   - Verify the backend API is accessible at the specified URL
+   - Check CORS configuration on the backend
+
+5. **Frontend can't reach backend**
+   - Development: Check VITE_PROXY_TARGET matches backend PORT
+   - Production: Verify VITE_API_BASE_URL is correct
+   - Check if backend server is running
 
 ## Contributing
 
