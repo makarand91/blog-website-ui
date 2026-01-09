@@ -1,8 +1,9 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import ReactMarkdown from 'react-markdown'
 import { fetchArticleBySlug, getAllArticleSlugs } from '@/lib/strapi'
-import { formatDate, getRevalidateTime } from '@/lib/utils'
+import { formatDate, getRevalidateTime, getThumbnailUrl, getImageAlt } from '@/lib/utils'
 import { generateArticleMetadata, generateArticleJsonLd } from '@/lib/metadata'
 
 // Enable ISR - revalidate every X seconds
@@ -36,6 +37,8 @@ export default async function ArticlePage({ params }) {
 
   const { article, brand } = data
   const jsonLd = generateArticleJsonLd(article, brand)
+  const thumbnailUrl = getThumbnailUrl(article.thumbnail)
+  const imageAlt = getImageAlt(article.thumbnail, article.title)
 
   return (
     <>
@@ -85,6 +88,19 @@ export default async function ArticlePage({ params }) {
                     {cat}
                   </span>
                 ))}
+              </div>
+            )}
+
+            {thumbnailUrl && (
+              <div className="relative w-full h-96 mb-8 rounded-lg overflow-hidden bg-gray-200">
+                <Image
+                  src={thumbnailUrl}
+                  alt={imageAlt}
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+                />
               </div>
             )}
 

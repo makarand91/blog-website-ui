@@ -1,11 +1,28 @@
 import Link from 'next/link'
-import { formatDate, generateExcerpt } from '@/lib/utils'
+import Image from 'next/image'
+import { formatDate, generateExcerpt, getThumbnailUrl, getImageAlt } from '@/lib/utils'
 
 export default function ArticleCard({ article }) {
   const excerpt = generateExcerpt(article.content, 200)
+  const thumbnailUrl = getThumbnailUrl(article.thumbnail, 'medium')
+  const imageAlt = getImageAlt(article.thumbnail, article.title)
 
   return (
     <article className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+      {thumbnailUrl && (
+        <Link href={`/article/${article.slug}`}>
+          <div className="relative w-full h-48 bg-gray-200">
+            <Image
+              src={thumbnailUrl}
+              alt={imageAlt}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          </div>
+        </Link>
+      )}
+
       <div className="p-6">
         {article.is_sponsored && (
           <div className="flex items-center mb-3">
