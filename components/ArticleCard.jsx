@@ -7,9 +7,18 @@ export default function ArticleCard({ article }) {
   const thumbnailUrl = getThumbnailUrl(article.thumbnail, 'medium')
   const imageAlt = getImageAlt(article.thumbnail, article.title)
 
+  // Debug logging
+  if (typeof window === 'undefined') {
+    console.log(`Article "${article.title}" thumbnail:`, {
+      hasThumbnail: !!article.thumbnail,
+      thumbnailUrl,
+      thumbnail: article.thumbnail
+    })
+  }
+
   return (
     <article className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      {thumbnailUrl && (
+      {thumbnailUrl ? (
         <Link href={`/article/${article.slug}`}>
           <div className="relative w-full h-48 bg-gray-200">
             <Image
@@ -21,6 +30,10 @@ export default function ArticleCard({ article }) {
             />
           </div>
         </Link>
+      ) : (
+        <div className="w-full h-48 bg-gray-300 flex items-center justify-center">
+          <p className="text-gray-500 text-sm">No thumbnail</p>
+        </div>
       )}
 
       <div className="p-6">

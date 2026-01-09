@@ -17,6 +17,12 @@ export default async function HomePage() {
 
   try {
     articles = await getAllArticles()
+
+    // Debug: Log first article to check thumbnail data
+    if (articles.length > 0) {
+      console.log('First article data:', JSON.stringify(articles[0], null, 2))
+      console.log('First article thumbnail:', articles[0].thumbnail)
+    }
   } catch (err) {
     error = 'Failed to load articles. Please try again later.'
     console.error('Error loading articles:', err)
